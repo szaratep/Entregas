@@ -19,4 +19,4 @@ function extraLongFactorial (n){
     }
 }
 
-console.log(extraLongFactorial(100));
+console.log(extraLongFactorial(25));
