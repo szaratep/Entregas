@@ -6,7 +6,7 @@ export const cuentasBancarias = [
     tipoCuenta: "Ahorros",
     moneda: "USD",
     saldoInicial: 100,
-    saldoActual: 250,
+    saldoActual: 100,
     activa: true,
     fechaApertura: "2026-01-15"
   },

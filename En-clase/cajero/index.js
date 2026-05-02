@@ -1,103 +1,73 @@
 // simular un cajero automatico, el cual puede realizar diferentes tareas, crear la cuenta debe tener un saldo de 100us:
-// 1. consignar dinero (no se pueden consignar valores negativos) --
-// 2. retirar: al retirar solo se puede dejando un saldo del 10% del saldo de la apertura de la cuenta
-// 3. consultar --
-// 4. pagar: cobrar el 5% --
-// 5. transferir: cobra 1% --
+// 1. consignar dinero (no se pueden consignar valores negativos) 
+// 2. retirar: al retirar solo se puede dejando un saldo del 10% del saldo de la apertura de la cuenta 
+// 3. consultar 
+// 4. pagar: cobrar el 5% 
+// 5. transferir: cobra 1% 
 // 6. historial de movimientos ( lista )
+import { consignment, consult, pay, transfer, withdraw } from "./functions.js";
 
-import { cuentasBancarias } from "./data.js";
+let numAccount = '';
+let numDocument = '';
+let option = null;
 
-function consignment(amount, destinationAccount) {
-    if (validateNumber(amount) && verifyDestinationAccount(destinationAccount)){
-        let account = getAccount(destinationAccount);
-        return `La consignacion se hizo exitosamente por un valor de: ${amount} \nCon un numero de cuenta: ${account.numeroCuenta} \nTitular de la cuenta: ${account.titular}`
-    }else{
-        return `Error al hacer la consignacion, verifica el numero de cuenta de destino o que ingreses el monto correcto, recueda que no puede ser 0`
-    }
-};
+alert('Bienvenido al cajero');
+numAccount = prompt('Dame Tu numero de cuenta');
+numDocument = prompt('Dame tu numero de documento');
+do {
+    let amount = 0;
+    let newNumAcount = '';
+    let value = 0;
+    let referenceNumber = '';
+    let accoutn = undefined;
+    option = Number(prompt('¿Que deseas hacer hoy?\n1. Consignar dinero a una cuenta\n2. Retirar dinero de tu cuenta\n3. Consultar Tu cuenta\n4. Pagar\n5. Transferir a otra cuenta\n6. Salir'));
 
-function withdraw (amount, numAccount){
-    
-};
+    switch (option) {
+        case 1:
+            amount = Number(prompt('Dame el moto a consignar'));
+            value = Number(prompt('¿Es a tu cuenta?\n1. Si\n2. No'))
+            if (value === 1) {
+                alert(consignment(amount, numAccount));
+            } else {
+                newNumAcount = prompt('Dame el numero de la cuenta')
+                alert(consignment(amount, newNumAcount));
+            }
+            break;
 
-function createAccount(idUser) {
-    if (verifyAccountForUserId(idUser)){
-        return 'tu cuenta ha sido creada correctamente'
-    }
-    return 'error al momento de crear tu cuenta'
-};
+        case 2:
+            amount = Number(prompt('Dame el moto a retirar'));
+            alert(withdraw(amount, numAccount));
+            break;
 
-function pay (amount, account){
-    if(validateNumber(amount) && validateBalance(amount, account)){
-        return `Pago efectuado exitosamente por un valor de ${amount + (amount * 0.05)} (Se cobra el 5%)`
-    }
-    return `pago invalido` 
-}
-
-function transfer (sourceAccount, amount, destinationAccount){
-    if (validateNumber(amount) && verifyDestinationAccount(destinationAccount) && verifySourceAccount(sourceAccount)){
-        let accountSource = getAccount(sourceAccount);
-        let destinationAccount = getAccount(sourceAccount);
-
-        if(validateBalance(amount, accountSource)){
-            return `´Transferencia exitosa: \nValor: ${amount + (amount * 0.01)} (se cobra un 1%) `
+        case 3: {
+            let account = consult(numDocument);
+            alert(`Titular: ${account.titular}\nNumero de cuenta: ${account.numeroCuenta}\nDocumento: ${account.documento}\nTipo de cuenta: ${account.tipoCuenta}\nMoneda: ${account.moneda}\nSaldo actual: ${account.saldoActual}\nFecha de apertura: ${account.fechaApertura}`);
+            break;
         }
+
+        case 4:
+            amount = Number(prompt('Dame el moto a pagar'));
+            referenceNumber = prompt('Dame la referencia de pago');
+            alert(pay(amount, numAccount, referenceNumber));
+            break;
+
+        case 5:
+            newNumAcount = '';
+            amount = Number(prompt('Dame el moto a transferir'));
+            newNumAcount = Number(prompt('Dame el numero de la cuenta'));
+            alert(transfer(numAccount, amount, newNumAcount));
+            break;
+
+        case 6:
+            alert('Hasta luego, gracias por visitarnos!');
+            option = null;
+            break;
+
+        default:
+            alert('Opcion invalida, vuelve a ingresar');
+            option = null;
+            break;
+
     }
 
-    return 'transferencia invalida'
-}
-
-function getAccount(numAccount) {
-    for (let account of cuentasBancarias) {
-        if(numAccount === account.numeroCuenta && account.activa){
-            return account
-        }
-    }
-    return null
-};
-
-
-function verifySourceAccount(sourceAccount) {
-    for (let value of cuentasBancarias) {
-        if (sourceAccount === value.numeroCuenta && value.activa) {
-            return true;
-        }
-    }
-    return false;
-};
-
-function verifyDestinationAccount(destinationAccount) {
-    for (let value of cuentasBancarias) {
-        if (destinationAccount === value.numeroCuenta && value.activa) {
-            return true;
-        }
-    }
-    return false;
-};
-
-function verifyAccountForUserId (id){
-    for (let value of cuentasBancarias){
-        if(value.documento == id){
-            return false
-        }
-    }
-    return true
-}
-
-function validateNumber(num) {
-    if (num < 0){
-        return false;
-    }
-    return true
-};
-
-function validateBalance (num, account){
-    if (num < account.saldoActual){
-        return false;
-    }
-
-    return true;
-}
-
-console.log(consignment(100, "100000002"));
+} while (option !== null);
