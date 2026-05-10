@@ -23,4 +23,4 @@ function jugar(jugadaUsuario){
     return result; 
 }
 
-console.log(jugar('hola'));
+console.log(jugar('Piedra'));
