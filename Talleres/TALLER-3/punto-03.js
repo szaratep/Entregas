@@ -1,6 +1,6 @@
-function elegirGanador(array){
-    let position = Math.floor(Math.random() * array.length);
-    return array[position];
+function tirarDadoConMensaje(){
+    let dado = Math.floor(Math.random() *  6) + 1
+    return `sacaste un ${dado}` 
 }
 
-console.log(elegirGanador(["Ana", "Luis", "Carlos", "Ema"]))
+console.log(tirarDadoConMensaje());
